@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL,
+  'https://empripanel.com',
   'https://www.empripanel.com',
   'http://localhost:3000'
 ];
