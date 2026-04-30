@@ -1,0 +1,81 @@
+export const CATEGORIES = [
+  { value: 'gastronomia', label: 'Gastronomía' },
+  { value: 'restaurantes', label: 'Restaurantes' },
+  { value: 'bares', label: 'Bares' },
+  { value: 'cervecerias', label: 'Cervecerías' },
+  { value: 'cafeterias', label: 'Cafeterías' },
+  { value: 'pasteleria_panaderia', label: 'Pastelería y Panadería' },
+  { value: 'comida_rapida', label: 'Comida Rápida' },
+  { value: 'catering', label: 'Catering' },
+  { value: 'tiendas', label: 'Tiendas' },
+  { value: 'indumentaria', label: 'Indumentaria' },
+  { value: 'calzado', label: 'Calzado' },
+  { value: 'accesorios', label: 'Accesorios' },
+  { value: 'electronica', label: 'Electrónica' },
+  { value: 'regalos', label: 'Regalos' },
+  { value: 'librerias', label: 'Librerías' },
+  { value: 'servicios_profesionales', label: 'Servicios Profesionales' },
+  { value: 'servicios_financieros', label: 'Servicios financieros' },
+  { value: 'seguros', label: 'Seguros' },
+  { value: 'diseno_marketing', label: 'Diseño y Marketing' },
+  { value: 'tecnologia', label: 'Tecnología' },
+  { value: 'ecommerce', label: 'Ecommerce' },
+  { value: 'freelancers', label: 'Freelancers' },
+  { value: 'fotografia_video', label: 'Fotografía y Video' },
+  { value: 'legal_abogados', label: 'Legal y Abogados' },
+  { value: 'reparaciones', label: 'Reparaciones' },
+  { value: 'limpieza', label: 'Limpieza' },
+  { value: 'logistica', label: 'Logística' },
+  { value: 'jardineria', label: 'Jardinería' },
+  { value: 'agricultura', label: 'Agricultura' },
+  { value: 'alquileres', label: 'Alquileres' },
+  { value: 'lavanderia', label: 'Lavandería' },
+  { value: 'taller', label: 'Taller' },
+  { value: 'belleza', label: 'Belleza' },
+  { value: 'bienestar_terapias', label: 'Bienestar y Terapias' },
+  { value: 'peluqueria', label: 'Peluquería' },
+  { value: 'barberia', label: 'Barbería' },
+  { value: 'estetica', label: 'Estética' },
+  { value: 'salud', label: 'Salud' },
+  { value: 'fitness', label: 'Fitness' },
+  { value: 'nutricion', label: 'Nutrición' },
+  { value: 'hogar', label: 'Hogar' },
+  { value: 'decoracion', label: 'Decoración' },
+  { value: 'construccion', label: 'Construcción' },
+  { value: 'inmobiliaria', label: 'Inmobiliaria' },
+  { value: 'mantenimiento', label: 'Mantenimiento' },
+  { value: 'educacion', label: 'Educación' },
+  { value: 'cursos', label: 'Cursos' },
+  { value: 'talleres', label: 'Talleres' },
+  { value: 'idiomas', label: 'Idiomas' },
+  { value: 'arte_cultura', label: 'Arte y Cultura' },
+  { value: 'automotor', label: 'Automotor' },
+  { value: 'turismo', label: 'Turismo' },
+  { value: 'eventos', label: 'Eventos' },
+  { value: 'mascotas', label: 'Mascotas' },
+  { value: 'emprendimientos', label: 'Emprendimientos' },
+  { value: 'otros', label: 'Otros' },
+];
+
+/** Shared locale-aware alphabetical categories for all UI selectors. */
+export const CATEGORIES_SORTED = [...CATEGORIES].sort((a, b) => a.label.localeCompare(b.label, 'es'));
+
+export function getValueForLabel(label: string): string | undefined {
+  const c = CATEGORIES.find((x) => x.label === label);
+  return c?.value;
+}
+
+export function getLabelForValue(value: string): string | undefined {
+  const c = CATEGORIES.find((x) => x.value === value);
+  return c?.label;
+}
+
+/**
+ * Explore filter `<select>` uses slug `value`; businesses in DB store the display `label`.
+ * Category API matches unaccent(lower(stored)) — slug and label normalize differently, so always send the label.
+ */
+export function categorySlugForApiRequest(slug: string): string {
+  const t = typeof slug === 'string' ? slug.trim() : '';
+  if (!t) return '';
+  return getLabelForValue(t) ?? t;
+}

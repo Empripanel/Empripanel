@@ -1,0 +1,74 @@
+Nombre del proyecto: Empripanel
+
+Autor: Santiago Pérez Junqueira
+
+Fecha: 15/04/2026
+
+---
+
+Descripción general:
+
+Empripanel es una plataforma digital orientada al descubrimiento de negocios y emprendimientos a través de una experiencia visual basada en tarjetas.
+
+A diferencia de una red social tradicional, los usuarios no generan contenido. En su lugar, cada negocio cuenta con una ficha estructurada que permite ser explorada, filtrada y descubierta por otros usuarios.
+
+La plataforma combina características de exploración visual, directorio comercial y sistema de rankings.
+
+---
+
+Funcionalidades principales:
+
+- Exploración de negocios mediante tarjetas visuales
+- Sistema de filtrado por categorías
+- Buscador por nombre, categoría y descripción
+- Sistema de rankings (más clickeados, más likeados y nuevos)
+- Sistema de shuffle para exploración aleatoria
+- Fichas de negocio con información completa y enlaces externos
+- Sistema de reportes y moderación
+- Roles de usuario: Explorer, Business y Admin
+- Panel de administración con control de contenido
+
+---
+
+Estructura del proyecto:
+
+El proyecto está dividido en dos partes principales:
+
+1. Frontend:
+- Desarrollado con React, Next.js y TypeScript
+- Interfaz de usuario y experiencia visual
+- Navegación, exploración y visualización de negocios
+
+2. Backend:
+- Desarrollado con Node.js, Express, TypeScript, etc.
+- Manejo de lógica de negocio, autenticación y permisos.
+- Integración con base de datos mediante Prisma.
+
+---
+
+Base de datos:
+
+- Sistema de base de datos PostgreSQL
+- Gestión de datos mediante Prisma
+- Modelos principales: User y Business
+
+---
+
+Objetivo del proyecto:
+
+El objetivo de Empripanel es ofrecer una plataforma moderna y eficiente para que los emprendimientos puedan ganar visibilidad y ser descubiertos de forma simple, visual e intuitiva.
+
+---
+
+Contenido entregado:
+
+- Código fuente completo del frontend
+- Código fuente completo del backend
+- Estructura funcional del sistema
+- Implementación de lógica de negocio y experiencia de usuario
+
+---
+
+Notas:
+
+Este proyecto se presenta como una obra de software inédita, incluyendo su estructura, lógica de funcionamiento y desarrollo completo.

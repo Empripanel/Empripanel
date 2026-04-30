@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  EXPLORER
+  BUSINESS
+  ADMIN
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  username   String     @unique
+  email      String     @unique
+  password   String
+  role       Role       @default(EXPLORER)
+  createdAt  DateTime   @default(now())
+  isDeleted  Boolean    @default(false)
+  deletedAt  DateTime?
+  businesses Business[]
+  likes      Like[]
+  visits     Visit[]
+  reports    Report[]
+  // When adding Business or other owner-related models, use relation with onDelete: Cascade
+  // so DELETE /api/users/me removes the user and all owned entities.
+}
+
+model Business {
+  id             String   @id @default(uuid())
+  ownerId        Int
+  owner          User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name           String
+  category       String
+  bannerImageUrl String
+  redirectUrl    String
+  slogan         String
+  description    String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  likeCount      Int      @default(0)
+  clickCount     Int      @default(0)
+  reportCount    Int      @default(0)
+  hidden         Boolean  @default(false)
+  // Optional fields
+  location       String?
+  phone          String?
+  contactEmail   String?
+  website        String?
+  instagram      String?
+  tiktok         String?
+  x              String?
+  linkedin       String?
+  facebook       String?
+  youtube        String?
+  likes          Like[]
+  visits         Visit[]
+  reports        Report[]
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  userId     Int
+  businessId String
+  createdAt  DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  business  Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, businessId])
+  @@index([userId])
+  @@index([businessId])
+}
+
+model Like {
+  id         String   @id @default(cuid())
+  userId     Int
+  businessId String
+  createdAt  DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  business  Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, businessId])
+}
+
+model Visit {
+  id         String   @id @default(cuid())
+  userId     Int
+  businessId String
+  createdAt  DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  business  Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([businessId])
+  @@index([createdAt])
+}
+
