@@ -12,7 +12,6 @@ export function getAuthCookieOptions() {
     secure: true,
     sameSite: 'none' as const,
     path: '/',
-    domain: '.empripanel.com',
   };
 }
 
@@ -23,6 +22,5 @@ export function getAuthCookieClearOptions() {
     secure: true,
     sameSite: 'none' as const,
     path: '/',
-    domain: '.empripanel.com',
   };
 }
