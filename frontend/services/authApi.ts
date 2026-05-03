@@ -8,6 +8,10 @@ const API_BASE = (() => {
   return `${trimmed}/api`;
 })();
 
+function withApiCredentials(init?: RequestInit): RequestInit {
+  return { ...init, credentials: 'include' };
+}
+
 const STORAGE_TOKEN = 'token';
 const STORAGE_USER = 'user';
 
@@ -58,7 +62,8 @@ export function setSession(token: string, user: BackendUser): void {
   localStorage.setItem(STORAGE_USER, JSON.stringify(user));
 }
 
-export function clearSession(): void {
+export async function clearSession(): Promise<void> {
+  await fetch(`${API_BASE}/auth/logout`, withApiCredentials({ method: 'POST' })).catch(() => {});
   localStorage.removeItem(STORAGE_TOKEN);
   localStorage.removeItem(STORAGE_USER);
 }
@@ -86,11 +91,14 @@ export function isTokenValid(): boolean {
 }
 
 export async function register(body: RegisterBody): Promise<AuthResponse> {
-  const res = await fetch(`${API_BASE}/auth/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+  const res = await fetch(
+    `${API_BASE}/auth/register`,
+    withApiCredentials({
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+  );
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     throw new Error(apiMessage(data, 'No pudimos completar el registro. Inténtalo nuevamente'));
@@ -99,11 +107,14 @@ export async function register(body: RegisterBody): Promise<AuthResponse> {
 }
 
 export async function login(body: LoginBody): Promise<AuthResponse> {
-  const res = await fetch(`${API_BASE}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+  const res = await fetch(
+    `${API_BASE}/auth/login`,
+    withApiCredentials({
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+  );
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     throw new Error(apiMessage(data, 'Credenciales inválidas'));
@@ -137,7 +148,7 @@ async function authFetch(url: string, options: RequestInit = {}) {
   if (typeof (options.body as string) === 'string' && !headers['Content-Type']) {
     headers['Content-Type'] = 'application/json';
   }
-  const res = await fetch(url, { ...options, headers });
+  const res = await fetch(url, withApiCredentials({ ...options, headers }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(apiMessage(data, 'Ocurrió un problema. Inténtalo nuevamente'));
   return data;
@@ -223,7 +234,7 @@ export const SHARE_BASE_URL =
 
 /** GET /api/business/:id - fetch single business (public). */
 export async function getBusinessById(id: string): Promise<BackendBusiness> {
-  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(id)}`);
+  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(id)}`, withApiCredentials());
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     if (res.status === 404) throw new Error('Negocio no encontrado');
@@ -234,11 +245,14 @@ export async function getBusinessById(id: string): Promise<BackendBusiness> {
 
 /** POST /api/business - create business. Returns created business. */
 export async function createBusiness(body: CreateBusinessBody): Promise<BackendBusiness> {
-  const res = await fetch(BUSINESS_BASE, {
-    method: 'POST',
-    headers: { ...authHeaders(), 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+  const res = await fetch(
+    BUSINESS_BASE,
+    withApiCredentials({
+      method: 'POST',
+      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+  );
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(apiMessage(data, 'No pudimos crear el negocio. Inténtalo nuevamente'));
   return data as BackendBusiness;
@@ -246,7 +260,7 @@ export async function createBusiness(body: CreateBusinessBody): Promise<BackendB
 
 /** GET /api/business - list businesses. */
 export async function getBusinesses(): Promise<BackendBusiness[]> {
-  const res = await fetch(BUSINESS_BASE, { headers: authHeaders() });
+  const res = await fetch(BUSINESS_BASE, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(apiMessage(data, 'No pudimos cargar los negocios. Inténtalo nuevamente'));
   return Array.isArray(data) ? data : [];
@@ -256,7 +270,7 @@ export async function getBusinesses(): Promise<BackendBusiness[]> {
 export async function getSearchBusinesses(query: string): Promise<BackendBusiness[]> {
   const q = typeof query === 'string' ? query.trim() : '';
   if (!q) return [];
-  const res = await fetch(`${BUSINESS_BASE}/search?q=${encodeURIComponent(q)}`, { headers: authHeaders() });
+  const res = await fetch(`${BUSINESS_BASE}/search?q=${encodeURIComponent(q)}`, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(apiMessage(data, 'No pudimos buscar. Inténtalo nuevamente'));
   return Array.isArray(data) ? data : [];
@@ -266,7 +280,7 @@ export async function getSearchBusinesses(query: string): Promise<BackendBusines
 export async function getBusinessesByCategory(category: string): Promise<BackendBusiness[]> {
   const cat = typeof category === 'string' ? category.trim() : '';
   if (!cat) return [];
-  const res = await fetch(`${BUSINESS_BASE}/category/${encodeURIComponent(cat)}`, { headers: authHeaders() });
+  const res = await fetch(`${BUSINESS_BASE}/category/${encodeURIComponent(cat)}`, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(apiMessage(data, 'No pudimos cargar la categoría. Inténtalo nuevamente'));
   return Array.isArray(data) ? data : [];
@@ -274,7 +288,7 @@ export async function getBusinessesByCategory(category: string): Promise<Backend
 
 /** GET /api/business/featured-category - featured category of the day (value). */
 export async function getFeaturedCategory(): Promise<{ featuredCategory: string }> {
-  const res = await fetch(`${BUSINESS_BASE}/featured-category`, { headers: authHeaders() });
+  const res = await fetch(`${BUSINESS_BASE}/featured-category`, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(apiMessage(data, 'No pudimos cargar la categoría destacada. Inténtalo nuevamente'));
   return data as { featuredCategory: string };
@@ -284,7 +298,7 @@ const RANKINGS_BASE = `${API_BASE}/rankings`;
 
 /** GET /api/rankings/top-clicked - businesses ordered by click count. */
 export async function getRankingsTopClicked(): Promise<BackendBusiness[]> {
-  const res = await fetch(`${RANKINGS_BASE}/top-clicked`, { headers: authHeaders() });
+  const res = await fetch(`${RANKINGS_BASE}/top-clicked`, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(apiMessage(data, 'No pudimos cargar el ranking. Inténtalo nuevamente'));
   return Array.isArray(data) ? data : [];
@@ -292,7 +306,7 @@ export async function getRankingsTopClicked(): Promise<BackendBusiness[]> {
 
 /** GET /api/rankings/top-liked - businesses ordered by like count. */
 export async function getRankingsTopLiked(): Promise<BackendBusiness[]> {
-  const res = await fetch(`${RANKINGS_BASE}/top-liked`, { headers: authHeaders() });
+  const res = await fetch(`${RANKINGS_BASE}/top-liked`, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(apiMessage(data, 'No pudimos cargar el ranking. Inténtalo nuevamente'));
   return Array.isArray(data) ? data : [];
@@ -300,7 +314,7 @@ export async function getRankingsTopLiked(): Promise<BackendBusiness[]> {
 
 /** GET /api/rankings/new - recently created businesses. */
 export async function getRankingsNew(): Promise<BackendBusiness[]> {
-  const res = await fetch(`${RANKINGS_BASE}/new`, { headers: authHeaders() });
+  const res = await fetch(`${RANKINGS_BASE}/new`, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(apiMessage(data, 'No pudimos cargar los negocios nuevos. Inténtalo nuevamente'));
   return Array.isArray(data) ? data : [];
@@ -308,7 +322,7 @@ export async function getRankingsNew(): Promise<BackendBusiness[]> {
 
 /** GET /api/business/panel - list businesses owned by current user. */
 export async function getPanelBusinesses(): Promise<BackendBusiness[]> {
-  const res = await fetch(`${BUSINESS_BASE}/panel`, { headers: authHeaders() });
+  const res = await fetch(`${BUSINESS_BASE}/panel`, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(apiMessage(data, 'No pudimos cargar tu panel. Inténtalo nuevamente'));
   return Array.isArray(data) ? data : [];
@@ -316,11 +330,11 @@ export async function getPanelBusinesses(): Promise<BackendBusiness[]> {
 
 /** PUT /api/business/:id - update business (owner only). Returns updated business. */
 export async function updateBusiness(id: string, body: CreateBusinessBody): Promise<BackendBusiness> {
-  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(id)}`, withApiCredentials({
     method: 'PUT',
     headers: { ...authHeaders(), 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
-  });
+  }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     if (res.status === 403) throw new Error(apiMessage(data, 'No tenés permiso para editar este negocio'));
@@ -332,10 +346,10 @@ export async function updateBusiness(id: string, body: CreateBusinessBody): Prom
 
 /** DELETE /api/business/:id - delete business (owner or admin). */
 export async function deleteBusiness(id: string): Promise<void> {
-  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(id)}`, withApiCredentials({
     method: 'DELETE',
     headers: authHeaders(),
-  });
+  }));
   if (res.status === 204) return;
   const data = await res.json().catch(() => ({}));
   if (res.status === 403) throw new Error(apiMessage(data, 'No tenés permiso para eliminar este negocio'));
@@ -345,10 +359,10 @@ export async function deleteBusiness(id: string): Promise<void> {
 
 /** PATCH /api/business/:id/hide - hide business (admin only). */
 export async function hideBusiness(id: string): Promise<BackendBusiness> {
-  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(id)}/hide`, {
+  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(id)}/hide`, withApiCredentials({
     method: 'PATCH',
     headers: authHeaders(),
-  });
+  }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     if (res.status === 403) throw new Error(apiMessage(data, 'Solo los administradores pueden ocultar fichas'));
@@ -360,10 +374,10 @@ export async function hideBusiness(id: string): Promise<BackendBusiness> {
 
 /** PATCH /api/business/:id/restore - restore hidden business (admin only). */
 export async function restoreBusiness(id: string): Promise<BackendBusiness> {
-  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(id)}/restore`, {
+  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(id)}/restore`, withApiCredentials({
     method: 'PATCH',
     headers: authHeaders(),
-  });
+  }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     if (res.status === 403) throw new Error(apiMessage(data, 'Solo los administradores pueden restaurar fichas'));
@@ -375,7 +389,7 @@ export async function restoreBusiness(id: string): Promise<BackendBusiness> {
 
 /** GET /api/admin/hidden-businesses - list hidden businesses (admin only). */
 export async function getHiddenBusinesses(): Promise<BackendBusiness[]> {
-  const res = await fetch(`${API_BASE}/admin/hidden-businesses`, { headers: authHeaders() });
+  const res = await fetch(`${API_BASE}/admin/hidden-businesses`, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(apiMessage(data, 'No pudimos cargar las fichas ocultas. Inténtalo nuevamente'));
   return Array.isArray(data) ? data : [];
@@ -394,10 +408,10 @@ export async function resetAdminUserPassword(
 
 /** POST /api/business/:id/like - toggle like. Returns { liked, likeCount }. */
 export async function toggleLike(businessId: string): Promise<{ liked: boolean; likeCount: number }> {
-  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(businessId)}/like`, {
+  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(businessId)}/like`, withApiCredentials({
     method: 'POST',
     headers: authHeaders(),
-  });
+  }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     if (res.status === 404) throw new Error(apiMessage(data, 'Negocio no encontrado'));
@@ -408,10 +422,10 @@ export async function toggleLike(businessId: string): Promise<{ liked: boolean; 
 
 /** POST /api/business/:id/click - register click (auth required). Returns { clickCount }. */
 export async function registerClick(businessId: string): Promise<{ clickCount: number }> {
-  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(businessId)}/click`, {
+  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(businessId)}/click`, withApiCredentials({
     method: 'POST',
     headers: authHeaders(),
-  });
+  }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     if (res.status === 404) throw new Error(apiMessage(data, 'Negocio no encontrado'));
@@ -422,10 +436,10 @@ export async function registerClick(businessId: string): Promise<{ clickCount: n
 
 /** POST /api/business/:id/report - toggle report. Returns { reported, reportCount }. */
 export async function toggleReport(businessId: string): Promise<{ reported: boolean; reportCount: number }> {
-  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(businessId)}/report`, {
+  const res = await fetch(`${BUSINESS_BASE}/${encodeURIComponent(businessId)}/report`, withApiCredentials({
     method: 'POST',
     headers: authHeaders(),
-  });
+  }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     if (res.status === 404) throw new Error(apiMessage(data, 'Negocio no encontrado'));
@@ -436,7 +450,7 @@ export async function toggleReport(businessId: string): Promise<{ reported: bool
 
 /** GET /api/users/likes - list business IDs liked by current user. */
 export async function getLikedBusinessIds(): Promise<string[]> {
-  const res = await fetch(`${USERS_BASE}/likes`, { headers: authHeaders() });
+  const res = await fetch(`${USERS_BASE}/likes`, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) return [];
   const list = Array.isArray(data) ? data : [];
@@ -445,7 +459,7 @@ export async function getLikedBusinessIds(): Promise<string[]> {
 
 /** GET /api/users/likes - list full liked businesses (as profiles). */
 export async function getLikedBusinesses(): Promise<ReturnType<typeof businessToProfile>[]> {
-  const res = await fetch(`${USERS_BASE}/likes`, { headers: authHeaders() });
+  const res = await fetch(`${USERS_BASE}/likes`, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) return [];
   const list = Array.isArray(data) ? data : [];
@@ -454,7 +468,7 @@ export async function getLikedBusinesses(): Promise<ReturnType<typeof businessTo
 
 /** GET /api/users/visits - visit history (business + visitedAt). */
 export async function getVisitHistory(): Promise<{ business: ReturnType<typeof businessToProfile>; visitedAt: string }[]> {
-  const res = await fetch(`${USERS_BASE}/visits`, { headers: authHeaders() });
+  const res = await fetch(`${USERS_BASE}/visits`, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) return [];
   const list = Array.isArray(data) ? data : [];
@@ -469,7 +483,7 @@ export async function getUserInteractionState(): Promise<{
   visitedBusinessIds: string[];
   reportedBusinessIds: string[];
 }> {
-  const res = await fetch(`${USERS_BASE}/interaction-state`, { headers: authHeaders() });
+  const res = await fetch(`${USERS_BASE}/interaction-state`, withApiCredentials({ headers: authHeaders() }));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) return { visitedBusinessIds: [], reportedBusinessIds: [] };
   return {

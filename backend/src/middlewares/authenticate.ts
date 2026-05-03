@@ -1,17 +1,28 @@
 import { NextFunction, Request, Response } from 'express';
+import { AUTH_COOKIE_NAME } from '../utils/authCookie';
 import { verifyAuthToken } from '../utils/jwt';
 import { prisma } from '../utils/prisma';
 
-export async function authenticate(req: Request, res: Response, next: NextFunction) {
-  const header = req.header('Authorization');
-
-  if (!header) {
-    return res.status(401).json({ success: false, message: 'Missing Authorization header' });
-  }
-
+function bearerToken(header?: string): string | undefined {
+  if (!header) return undefined;
   const [scheme, token] = header.split(' ');
-  if (scheme !== 'Bearer' || !token) {
-    return res.status(401).json({ success: false, message: 'Invalid Authorization format' });
+  if (scheme !== 'Bearer' || !token) return undefined;
+  const trimmed = token.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
+function extractAuthToken(req: Request): string | undefined {
+  const fromHeader = bearerToken(req.header('Authorization'));
+  if (fromHeader) return fromHeader;
+  const fromCookie = req.cookies?.[AUTH_COOKIE_NAME];
+  return typeof fromCookie === 'string' && fromCookie.length > 0 ? fromCookie : undefined;
+}
+
+export async function authenticate(req: Request, res: Response, next: NextFunction) {
+  const token = extractAuthToken(req);
+
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'Missing or invalid authentication' });
   }
 
   try {
@@ -35,14 +46,10 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
   }
 }
 
-/** Sets req.user when a valid Bearer token is present; otherwise continues without auth. */
+/** Sets req.user when a valid Bearer token or auth cookie is present; otherwise continues without auth. */
 export async function optionalAuthenticate(req: Request, res: Response, next: NextFunction) {
-  const header = req.header('Authorization');
-  if (!header) {
-    return next();
-  }
-  const [scheme, token] = header.split(' ');
-  if (scheme !== 'Bearer' || !token) {
+  const token = extractAuthToken(req);
+  if (!token) {
     return next();
   }
   try {

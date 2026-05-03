@@ -53,10 +53,12 @@ async function registerUser(input) {
 async function loginUser(input) {
     const user = await prisma_1.prisma.user.findUnique({
         where: { username: input.username },
-        select: { id: true, username: true, email: true, role: true, password: true },
+        select: { id: true, username: true, email: true, role: true, password: true, isDeleted: true },
     });
     if (!user)
         throw new errors_1.AppError('Invalid credentials', 401);
+    if (user.isDeleted)
+        throw new errors_1.AppError('Account does not exist.', 401);
     const ok = await bcryptjs_1.default.compare(input.password, user.password);
     if (!ok)
         throw new errors_1.AppError('Invalid credentials', 401);

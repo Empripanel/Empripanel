@@ -989,7 +989,7 @@ const App: React.FC = () => {
     if (token && storedUser && authApi.isTokenValid()) {
       setAuthState({ user: authApi.toAppUser(storedUser), isAuthenticated: true });
     } else {
-      authApi.clearSession();
+      void authApi.clearSession();
     }
 
     // Listener de scroll para el botón Back to Top
@@ -1161,8 +1161,8 @@ const App: React.FC = () => {
     }
   };
 
-  const handleLogout = () => {
-    authApi.clearSession();
+  const handleLogout = async () => {
+    await authApi.clearSession();
     setAuthState({ user: null, isAuthenticated: false });
     setLikedBusinessIds([]);
     setReportedBusinessIds([]);
@@ -1177,7 +1177,7 @@ const App: React.FC = () => {
     setProfileActionLoading(true);
     try {
       await authApi.deleteAccount();
-      authApi.clearSession();
+      await authApi.clearSession();
       setAuthState({ user: null, isAuthenticated: false });
       setLikedBusinessIds([]);
       setReportedBusinessIds([]);
