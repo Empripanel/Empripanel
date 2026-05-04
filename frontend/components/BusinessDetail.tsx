@@ -146,20 +146,75 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
             </div>
           )}
 
-          <div className="flex flex-wrap items-center gap-8 mb-10 py-6 border-y border-gray-100 dark:border-gray-800">
-            <div className="flex items-center gap-3">
-              <div className={`p-3 rounded-2xl shadow-sm border ${isVisited ? 'bg-teal-500 text-white border-teal-600' : 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-400 border-teal-100 dark:border-teal-900/30'}`}><BarChart3 size={24} /></div>
-              <div><p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-widest">Visitas</p><p className="text-2xl font-black text-gray-900 dark:text-white">{business.clicks}</p></div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className={`p-3 rounded-2xl shadow-sm border ${isLiked ? 'bg-pink-500 text-white border-pink-600' : 'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border-pink-100 dark:border-pink-900/30'}`}><Heart size={24} fill={isLiked ? 'currentColor' : 'none'} /></div>
-              <div><p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-widest">Likes</p><p className="text-2xl font-black text-gray-900 dark:text-white">{business.likes}</p></div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className={`p-3 rounded-2xl shadow-sm border ${isReported ? 'bg-orange-500 text-white border-orange-600' : 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border-orange-100 dark:border-orange-900/30'}`}><AlertTriangle size={24} /></div>
-              <div><p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-widest">Reportes</p><p className="text-2xl font-black text-gray-900 dark:text-white">{reportCount}</p></div>
-            </div>
-          </div>
+          <div className="flex items-center justify-between gap-2 sm:gap-8 mb-6 sm:mb-10 py-4 sm:py-6 border-y border-gray-100 dark:border-gray-800">
+  
+  {/* VISITAS */}
+  <div className="flex items-center gap-2 sm:gap-3 min-w-[0]">
+    <div
+      className={`p-2 sm:p-3 rounded-2xl shadow-sm border ${
+        isVisited
+          ? 'bg-teal-500 text-white border-teal-600'
+          : 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-400 border-teal-100 dark:border-teal-900/30'
+      }`}
+    >
+      <BarChart3 className="w-[18px] h-[18px] sm:w-6 sm:h-6" />
+    </div>
+    <div>
+      <p className="text-[9px] sm:text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-widest">
+        Visitas
+      </p>
+      <p className="text-lg sm:text-2xl font-black text-gray-900 dark:text-white min-w-[32px] text-center">
+        {business.clicks}
+      </p>
+    </div>
+  </div>
+
+  {/* LIKES */}
+  <div className="flex items-center gap-2 sm:gap-3 min-w-[0]">
+    <div
+      className={`p-2 sm:p-3 rounded-2xl shadow-sm border ${
+        isLiked
+          ? 'bg-pink-500 text-white border-pink-600'
+          : 'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border-pink-100 dark:border-pink-900/30'
+      }`}
+    >
+      <Heart
+        className="w-[18px] h-[18px] sm:w-6 sm:h-6"
+        fill={isLiked ? 'currentColor' : 'none'}
+      />
+    </div>
+    <div>
+      <p className="text-[9px] sm:text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-widest">
+        Likes
+      </p>
+      <p className="text-lg sm:text-2xl font-black text-gray-900 dark:text-white min-w-[32px] text-center">
+        {business.likes}
+      </p>
+    </div>
+  </div>
+
+  {/* REPORTES */}
+  <div className="flex items-center gap-2 sm:gap-3 min-w-[0]">
+    <div
+      className={`p-2 sm:p-3 rounded-2xl shadow-sm border ${
+        isReported
+          ? 'bg-orange-500 text-white border-orange-600'
+          : 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border-orange-100 dark:border-orange-900/30'
+      }`}
+    >
+      <AlertTriangle className="w-[18px] h-[18px] sm:w-6 sm:h-6" />
+    </div>
+    <div>
+      <p className="text-[9px] sm:text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-widest">
+        Reportes
+      </p>
+      <p className="text-lg sm:text-2xl font-black text-gray-900 dark:text-white min-w-[32px] text-center">
+        {reportCount}
+      </p>
+    </div>
+  </div>
+
+</div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-10">
             {business.location && (
