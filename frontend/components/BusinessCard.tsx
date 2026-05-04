@@ -130,20 +130,21 @@ const BusinessCard: React.FC<BusinessCardProps> = ({ business, onClick, onVisit,
       </div>
 
       <div className="flex gap-2 w-full lg:w-auto mt-2 lg:mt-0 min-w-0 max-w-full">
-        <button 
-          onClick={(e) => {
-            e.stopPropagation();
-            onVisit(business);
-          }}
-          className="flex-1 lg:flex-none min-w-0 flex items-center justify-center gap-2 bg-teal-600 text-white px-6 py-4 rounded-2xl font-black text-sm hover:bg-teal-700 transition-all shadow-md active:scale-95 border border-white/10 whitespace-normal break-normal overflow-hidden"
-        >
-          <ExternalLink size={18} />
-          Visitar
-        </button>
-        <div className="hidden lg:flex items-center text-gray-300 dark:text-gray-700 group-hover:text-teal-600 dark:group-hover:text-teal-400 group-hover:translate-x-1 transition-all">
-          <ChevronRight size={28} />
-        </div>
-      </div>
+  <button 
+    onClick={(e) => {
+      e.stopPropagation();
+      onVisit(business);
+    }}
+    className="flex-1 lg:flex-none min-w-0 flex items-center justify-center gap-1.5 sm:gap-2 bg-teal-600 text-white px-4 sm:px-6 py-2.5 sm:py-4 rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm hover:bg-teal-700 transition-all shadow-md active:scale-95 border border-white/10 whitespace-normal break-normal overflow-hidden"
+  >
+    <ExternalLink className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
+    Visitar
+  </button>
+
+  <div className="hidden lg:flex items-center text-gray-300 dark:text-gray-700 group-hover:text-teal-600 dark:group-hover:text-teal-400 group-hover:translate-x-1 transition-all">
+    <ChevronRight size={28} />
+  </div>
+</div>
     </div>
   );
 };
