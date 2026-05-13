@@ -56,10 +56,14 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
   const isReported = reportedBusinessIds.includes(business.id);
   const isVisited = visitedBusinessIds.includes(business.id);
   const isAdmin = user?.username === 'Empripanel';
-  const [reportCount, setReportCount] = useState(
-  business.reportCount ?? business.reports.length
-);
-};
+  const [reportCount, setReportCount] = useState(0);
+
+useEffect(() => {
+  setReportCount(
+    business.reportCount ?? business.reports.length
+  );
+}, [business]);
+  
   useEffect(() => {
     // Disable background scroll
     document.body.style.overflow = 'hidden';
