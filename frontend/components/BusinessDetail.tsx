@@ -56,8 +56,9 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
   const isReported = reportedBusinessIds.includes(business.id);
   const isVisited = visitedBusinessIds.includes(business.id);
   const isAdmin = user?.username === 'Empripanel';
-  const reportCount = business.reportCount ?? business.reports.length;
-
+  const [reportCount, setReportCount] = useState(
+  business.reportCount ?? business.reports.length
+);
   useEffect(() => {
     // Disable background scroll
     document.body.style.overflow = 'hidden';
@@ -69,10 +70,18 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
   };
 
   const handleReport = () => {
-    if (onReport) {
-      onReport(business.id);
-    }
-  };
+  if (onReport) {
+    const wasReported = isReported;
+
+    onReport(business.id);
+
+    setReportCount((prev) =>
+      wasReported
+        ? Math.max(0, prev - 1)
+        : prev + 1
+    );
+  }
+};
 
   const handleSocialClick = (url: string) => {
     if (!url) return;
