@@ -59,6 +59,7 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
   const [reportCount, setReportCount] = useState(
   business.reportCount ?? business.reports.length
 );
+};
   useEffect(() => {
     // Disable background scroll
     document.body.style.overflow = 'hidden';
