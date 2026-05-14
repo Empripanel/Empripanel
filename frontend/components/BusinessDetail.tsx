@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BusinessProfile, UserAccount } from '../types';
 import { X as CloseIcon, Heart, ExternalLink, Share2, BarChart3, MapPin, Mail, Phone, Instagram, Linkedin, Facebook, Globe, AlertTriangle, Edit3, Trash2, EyeOff, Eye, Youtube } from 'lucide-react';
 
