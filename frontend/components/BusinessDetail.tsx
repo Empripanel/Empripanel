@@ -57,7 +57,15 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
   const isVisited = visitedBusinessIds.includes(business.id);
   const isAdmin = user?.username === 'Empripanel';
   const reportCount = business.reportCount ?? business.reports.length;
+  const [localLikeCount, setLocalLikeCount] = useState(business.likes);
+
   const [localReportCount, setLocalReportCount] = useState(reportCount);
+
+  const [localClickCount, setLocalClickCount] = useState(business.clicks);
+
+  const [likeLoading, setLikeLoading] = useState(false);
+  const [reportLoading, setReportLoading] = useState(false);
+  const [visitLoading, setVisitLoading] = useState(false);
   useEffect(() => {
     // Disable background scroll
     document.body.style.overflow = 'hidden';
@@ -68,15 +76,71 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
     onShare(business);
   };
 
-  const handleReport = () => {
-  if (onReport) {
-    const wasReported = isReported;
+  const handleLike = async () => {
+  if (likeLoading) return;
 
-    onReport(business.id);
+  const wasLiked = isLiked;
 
-    setLocalReportCount((prev) =>
-      wasReported ? Math.max(0, prev - 1) : prev + 1
+  setLikeLoading(true);
+
+  setLocalLikeCount((prev) =>
+    wasLiked
+      ? Math.max(0, prev - 1)
+      : prev + 1
+  );
+
+  try {
+    await Promise.resolve(onLike(business.id));
+  } catch {
+    setLocalLikeCount((prev) =>
+      wasLiked
+        ? prev + 1
+        : Math.max(0, prev - 1)
     );
+  } finally {
+    setLikeLoading(false);
+  }
+};
+
+  const handleReport = async () => {
+  if (!onReport || reportLoading) return;
+
+  const wasReported = isReported;
+
+  setReportLoading(true);
+
+  setLocalReportCount((prev) =>
+    wasReported
+      ? Math.max(0, prev - 1)
+      : prev + 1
+  );
+
+  try {
+    await Promise.resolve(onReport(business.id));
+  } catch {
+    setLocalReportCount((prev) =>
+      wasReported
+        ? prev + 1
+        : Math.max(0, prev - 1)
+    );
+  } finally {
+    setReportLoading(false);
+  }
+};
+
+  const handleVisit = async () => {
+  if (visitLoading) return;
+
+  setVisitLoading(true);
+
+  setLocalClickCount((prev) => prev + 1);
+
+  try {
+    await Promise.resolve(onVisit(business));
+  } catch {
+    setLocalClickCount((prev) => Math.max(0, prev - 1));
+  } finally {
+    setVisitLoading(false);
   }
 };
   
@@ -170,7 +234,7 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
         Visitas
       </p>
       <p className="text-lg sm:text-2xl font-black text-gray-900 dark:text-white min-w-[32px] text-center">
-        {business.clicks}
+        {localClickCount}
       </p>
     </div>
   </div>
@@ -194,7 +258,7 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
         Likes
       </p>
       <p className="text-lg sm:text-2xl font-black text-gray-900 dark:text-white min-w-[32px] text-center">
-        {business.likes}
+        {localLikeCount}
       </p>
     </div>
   </div>
@@ -272,16 +336,17 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
 
           <div className="flex flex-col sm:flex-row gap-4 sticky bottom-0 bg-white dark:bg-gray-950 pt-6 pb-2 mt-auto border-t border-gray-100 dark:border-gray-800">
             <button 
-              onClick={() => onVisit(business)} 
+              onClick={handleVisit}
+              disabled={visitLoading}
               className="flex-1 bg-teal-600 hover:bg-teal-700 text-white py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 transition-all shadow-xl shadow-teal-500/20 active:scale-95 border border-white/10"
             >
               <ExternalLink size={24} /> Visitar Negocio
             </button>
             <div className="flex gap-3">
-              <button onClick={() => onLike(business.id)} className={`w-20 h-16 rounded-2xl flex items-center justify-center transition-all shadow-md ${isLiked ? 'bg-pink-500 text-white shadow-pink-500/20 active:scale-95' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20'}`}>
+              <button onClick={handleLike} disabled={likeLoading} className={`w-20 h-16 rounded-2xl flex items-center justify-center transition-all shadow-md ${isLiked ? 'bg-pink-500 text-white shadow-pink-500/20 active:scale-95' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20'}`}>
                 <Heart size={28} fill={isLiked ? 'currentColor' : 'none'} className="transition-transform active:scale-125" />
               </button>
-              <button onClick={handleReport} className={`w-20 h-16 rounded-2xl flex items-center justify-center transition-all shadow-md ${isReported ? 'bg-orange-600 text-white active:scale-95' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20'}`}>
+              <button onClick={handleReport} disabled={reportLoading} className={`w-20 h-16 rounded-2xl flex items-center justify-center transition-all shadow-md ${isReported ? 'bg-orange-600 text-white active:scale-95' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20'}`}>
                 <AlertTriangle size={28} className="transition-transform active:scale-125" />
               </button>
               <button onClick={handleShare} className="w-20 h-16 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-all shadow-md active:scale-95"><Share2 size={28} /></button>
