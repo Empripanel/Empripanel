@@ -52,9 +52,12 @@ const TikTokIcon = () => (
 );
 
 const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBusinessIds = [], reportedBusinessIds = [], visitedBusinessIds = [], onClose, onLike, onVisit, onShare, onReport, onEdit, onDelete, onHide, onRestore, onRefreshProfiles, onToast }) => {
-  const isLiked = likedBusinessIds.includes(business.id);
-  const isReported = reportedBusinessIds.includes(business.id);
-  const isVisited = visitedBusinessIds.includes(business.id);
+  const initialLiked = likedBusinessIds.includes(business.id);
+  const initialReported = reportedBusinessIds.includes(business.id);
+  const initialVisited = visitedBusinessIds.includes(business.id);
+  const [localIsLiked, setLocalIsLiked] = useState(initialLiked);
+  const [localIsReported, setLocalIsReported] = useState(initialReported);
+  const [localIsVisited, setLocalIsVisited] = useState(initialVisited);
   const isAdmin = user?.username === 'Empripanel';
   const reportCount = business.reportCount ?? business.reports.length;
   const [localLikeCount, setLocalLikeCount] = useState(business.likes);
@@ -79,9 +82,11 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
   const handleLike = async () => {
   if (likeLoading) return;
 
-  const wasLiked = isLiked;
+  const wasLiked = localIsLiked;
 
   setLikeLoading(true);
+
+  setLocalIsLiked(prev => !prev);
 
   setLocalLikeCount((prev) =>
     wasLiked
@@ -105,9 +110,11 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
   const handleReport = async () => {
   if (!onReport || reportLoading) return;
 
-  const wasReported = isReported;
+  const wasReported = localIsReported;
 
   setReportLoading(true);
+
+  setLocalIsReported(prev => !prev);
 
   setLocalReportCount((prev) =>
     wasReported
@@ -132,6 +139,8 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
   if (visitLoading) return;
 
   setVisitLoading(true);
+
+  setLocalIsVisited(true);
 
   setLocalClickCount((prev) => prev + 1);
 
@@ -222,7 +231,7 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
   <div className="flex items-center gap-2 sm:gap-3 min-w-[0]">
     <div
       className={`p-2 sm:p-3 rounded-2xl shadow-sm border ${
-        isVisited
+        localIsVisited
           ? 'bg-teal-500 text-white border-teal-600'
           : 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-400 border-teal-100 dark:border-teal-900/30'
       }`}
@@ -243,14 +252,14 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
   <div className="flex items-center gap-2 sm:gap-3 min-w-[0]">
     <div
       className={`p-2 sm:p-3 rounded-2xl shadow-sm border ${
-        isLiked
+        localIsLiked
           ? 'bg-pink-500 text-white border-pink-600'
           : 'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border-pink-100 dark:border-pink-900/30'
       }`}
     >
       <Heart
         className="w-[18px] h-[18px] sm:w-6 sm:h-6"
-        fill={isLiked ? 'currentColor' : 'none'}
+        fill={localIsLiked ? 'currentColor' : 'none'}
       />
     </div>
     <div>
@@ -267,7 +276,7 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
   <div className="flex items-center gap-2 sm:gap-3 min-w-[0]">
     <div
       className={`p-2 sm:p-3 rounded-2xl shadow-sm border ${
-        isReported
+        localIsReported
           ? 'bg-orange-500 text-white border-orange-600'
           : 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border-orange-100 dark:border-orange-900/30'
       }`}
@@ -344,7 +353,7 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
             </button>
             <div className="flex gap-3">
               <button onClick={handleLike} disabled={likeLoading} className={`w-20 h-16 rounded-2xl flex items-center justify-center transition-all shadow-md ${isLiked ? 'bg-pink-500 text-white shadow-pink-500/20 active:scale-95' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20'}`}>
-                <Heart size={28} fill={isLiked ? 'currentColor' : 'none'} className="transition-transform active:scale-125" />
+                <Heart size={28} fill={localIsLiked ? 'currentColor' : 'none'} className="transition-transform active:scale-125" />
               </button>
               <button onClick={handleReport} disabled={reportLoading} className={`w-20 h-16 rounded-2xl flex items-center justify-center transition-all shadow-md ${isReported ? 'bg-orange-600 text-white active:scale-95' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20'}`}>
                 <AlertTriangle size={28} className="transition-transform active:scale-125" />
