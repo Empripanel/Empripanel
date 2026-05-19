@@ -352,10 +352,10 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
               <ExternalLink size={24} /> Visitar Negocio
             </button>
             <div className="flex gap-3">
-              <button onClick={handleLike} disabled={likeLoading} className={`w-20 h-16 rounded-2xl flex items-center justify-center transition-all shadow-md ${isLiked ? 'bg-pink-500 text-white shadow-pink-500/20 active:scale-95' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20'}`}>
+              <button onClick={handleLike} disabled={likeLoading} className={`w-20 h-16 rounded-2xl flex items-center justify-center transition-all shadow-md ${localIsLiked ? 'bg-pink-500 text-white shadow-pink-500/20 active:scale-95' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20'}`}>
                 <Heart size={28} fill={localIsLiked ? 'currentColor' : 'none'} className="transition-transform active:scale-125" />
               </button>
-              <button onClick={handleReport} disabled={reportLoading} className={`w-20 h-16 rounded-2xl flex items-center justify-center transition-all shadow-md ${isReported ? 'bg-orange-600 text-white active:scale-95' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20'}`}>
+              <button onClick={handleReport} disabled={reportLoading} className={`w-20 h-16 rounded-2xl flex items-center justify-center transition-all shadow-md ${localIsReported ? 'bg-orange-600 text-white active:scale-95' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20'}`}>
                 <AlertTriangle size={28} className="transition-transform active:scale-125" />
               </button>
               <button onClick={handleShare} className="w-20 h-16 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-all shadow-md active:scale-95"><Share2 size={28} /></button>
