@@ -1760,7 +1760,7 @@ const App: React.FC = () => {
         {activeTab === 'profile' && authState.isAuthenticated && (
           <div className="animate-in slide-in-from-right duration-500 space-y-12">
             <div className="flex items-center justify-between px-2">
-               <h2 className="text-3xl font-black text-gray-900 dark:text-white">Mi {authState.user?.username === 'Empripanel' ? 'administración' : (authState.user?.role === 'BUSINESS' ? 'negocio' : 'usuario')}</h2>
+               <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">Mi {authState.user?.username === 'Empripanel' ? 'administración' : (authState.user?.role === 'BUSINESS' ? 'negocio' : 'usuario')}</h2>
                <div className="w-12 h-12 bg-teal-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-teal-500/20">
                   {authState.user?.username === 'Empripanel' ? <Briefcase size={24} /> : (authState.user?.role === 'BUSINESS' ? <Building2 size={24} /> : <User size={24} />)}
                </div>
