@@ -1226,7 +1226,7 @@ const App: React.FC = () => {
   }, [authState.isAuthenticated]);
 
   const handleShare = useCallback((p: BusinessProfile) => {
-  const shareUrl = ${window.location.origin}/business/${p.id};
+  const shareUrl = `${window.location.origin}/business/${p.id}`;
 
   if (typeof navigator !== 'undefined' && navigator.share) {
     navigator.share({
