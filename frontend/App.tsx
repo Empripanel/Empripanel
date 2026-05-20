@@ -1536,10 +1536,7 @@ const App: React.FC = () => {
             <div className="w-10 h-10 bg-black rounded-2xl flex items-center justify-center shadow-lg">
               <Logo className="w-8 h-8" />
             </div>
-            <div>
-              <h1 className="text-xl font-black text-gray-900 dark:text-white leading-tight">Empripanel</h1>
-              <p className="text-[10px] text-teal-600 dark:text-teal-400 font-black uppercase tracking-widest">Vidriera Digital</p>
-            </div>
+            
           </button>
           <div className="flex items-center gap-3 min-w-0">
              <button 
