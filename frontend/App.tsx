@@ -1226,25 +1226,44 @@ const App: React.FC = () => {
   }, [authState.isAuthenticated]);
 
   const handleShare = useCallback((p: BusinessProfile) => {
-  const url = ${window.location.origin}?business=${p.id};
+  const shareUrl = ${window.location.origin}/business/${p.id};
 
   if (typeof navigator !== 'undefined' && navigator.share) {
     navigator.share({
-      url,
+      url: shareUrl,
       title: p.publicName,
       text: p.shortDescription,
     }).then(() => {
       setToast({ message: 'Enlace compartido', visible: true });
-      setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+
+      setTimeout(() =>
+        setToast(prev => ({ ...prev, visible: false })),
+      3000);
+
     }).catch(() => {
-      navigator.clipboard.writeText(url);
-      setToast({ message: 'Enlace copiado al portapapeles', visible: true });
-      setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+      navigator.clipboard.writeText(shareUrl);
+
+      setToast({
+        message: 'Enlace copiado al portapapeles',
+        visible: true
+      });
+
+      setTimeout(() =>
+        setToast(prev => ({ ...prev, visible: false })),
+      3000);
     });
+
   } else {
-    navigator.clipboard.writeText(url);
-    setToast({ message: 'Enlace copiado al portapapeles', visible: true });
-    setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+    navigator.clipboard.writeText(shareUrl);
+
+    setToast({
+      message: 'Enlace copiado al portapapeles',
+      visible: true
+    });
+
+    setTimeout(() =>
+      setToast(prev => ({ ...prev, visible: false })),
+    3000);
   }
 }, []);
 
