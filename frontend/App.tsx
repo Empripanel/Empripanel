@@ -1115,6 +1115,15 @@ const App: React.FC = () => {
     }
   }, [activeTab]);
 
+  useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const businessId = params.get('business');
+
+  if (businessId) {
+    setSelectedProfileId(businessId);
+  }
+}, []);
+
   // Control global de scroll para modales
   useEffect(() => {
     if (selectedProfileId || showProfileModal || deletingProfileId || showDeleteAccountConfirm) {
@@ -1217,26 +1226,27 @@ const App: React.FC = () => {
   }, [authState.isAuthenticated]);
 
   const handleShare = useCallback((p: BusinessProfile) => {
-    const url = `${authApi.SHARE_BASE_URL}/business/${p.id}`;
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      navigator.share({
-        url,
-        title: p.publicName,
-        text: p.shortDescription,
-      }).then(() => {
-        setToast({ message: 'Enlace compartido', visible: true });
-        setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
-      }).catch(() => {
-        navigator.clipboard.writeText(url);
-        setToast({ message: 'Enlace copiado al portapapeles', visible: true });
-        setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
-      });
-    } else {
+  const url = ${window.location.origin}?business=${p.id};
+
+  if (typeof navigator !== 'undefined' && navigator.share) {
+    navigator.share({
+      url,
+      title: p.publicName,
+      text: p.shortDescription,
+    }).then(() => {
+      setToast({ message: 'Enlace compartido', visible: true });
+      setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+    }).catch(() => {
       navigator.clipboard.writeText(url);
       setToast({ message: 'Enlace copiado al portapapeles', visible: true });
       setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
-    }
-  }, []);
+    });
+  } else {
+    navigator.clipboard.writeText(url);
+    setToast({ message: 'Enlace copiado al portapapeles', visible: true });
+    setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+  }
+}, []);
 
   const handleLike = useCallback(async (pid: string) => {
     if (!authState.isAuthenticated || !authState.user) return;
