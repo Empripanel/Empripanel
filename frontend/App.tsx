@@ -1533,7 +1533,7 @@ const App: React.FC = () => {
             onClick={() => { setActiveTab('home'); handleScrollToStart(); }}
             className="flex items-center gap-2 hover:opacity-80 transition-opacity text-left active:scale-[0.98]"
           >
-            <div className="w-10 h-10 bg-black rounded-2xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-gray rounded-2xl flex items-center justify-center shadow-lg">
               <Logo className="w-8 h-8" />
             </div>
             
