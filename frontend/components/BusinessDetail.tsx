@@ -193,38 +193,46 @@ const BusinessDetail: React.FC<BusinessDetailProps> = ({ business, user, likedBu
         <div className="p-8 sm:p-12">
           {/* Admin Toolbar */}
           {isAdmin && (
-            <div className="flex flex-wrap gap-2 mb-6 p-4 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/20">
-              <p className="w-full text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest mb-2">Poderes de Administrador</p>
-              <button 
-                onClick={onEdit} 
-                className="flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-xl text-xs font-black shadow-sm border border-gray-100 dark:border-gray-700 hover:text-teal-600 transition-all"
-              >
-                <Edit3 size={14} /> Editar
-              </button>
-              <button 
-                onClick={() => onDelete && onDelete(business.id)} 
-                className="flex items-center gap-2 bg-white dark:bg-gray-800 text-red-600 dark:text-red-400 px-4 py-2 rounded-xl text-xs font-black shadow-sm border border-gray-100 dark:border-gray-700 hover:bg-red-600 hover:text-white transition-all"
-              >
-                <Trash2 size={14} /> Eliminar
-              </button>
-              {business.status === 'visible' ? (
-                <button 
-                  onClick={() => onHide?.(business.id)} 
-                  className="flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-xl text-xs font-black shadow-sm border border-gray-100 dark:border-gray-700 hover:text-red-600 transition-all"
-                >
-                  <EyeOff size={14} /> Ocultar
-                </button>
-              ) : (
-                <button 
-                  onClick={() => onRestore?.(business.id)} 
-                  className="flex items-center gap-2 bg-white dark:bg-gray-800 text-teal-600 dark:text-teal-400 px-4 py-2 rounded-xl text-xs font-black shadow-sm border border-gray-100 dark:border-gray-700 hover:bg-teal-600 hover:text-white transition-all"
-                >
-                  <Eye size={14} /> Reponer
-                </button>
-              )}
-            </div>
-          )}
+  <div className="flex flex-wrap gap-2 mb-6 p-4 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/20">
+    <p className="w-full text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest mb-2">
+      Poderes de Administrador
+    </p>
 
+    <button
+      onClick={onEdit}
+      className="flex items-center gap-1 px-3 py-2 sm:px-4 sm:py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs font-black rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:text-teal-600 transition-all"
+    >
+      <Edit3 size={12} className="sm:w-[14px] sm:h-[14px]" />
+      Editar
+    </button>
+
+    <button
+      onClick={() => onDelete && onDelete(business.id)}
+      className="flex items-center gap-1 px-3 py-2 sm:px-4 sm:py-2 bg-white dark:bg-gray-800 text-red-600 dark:text-red-400 text-xs font-black rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:bg-red-600 hover:text-white transition-all"
+    >
+      <Trash2 size={12} className="sm:w-[14px] sm:h-[14px]" />
+      Eliminar
+    </button>
+
+    {business.status === 'visible' ? (
+      <button
+        onClick={() => onHide?.(business.id)}
+        className="flex items-center gap-1 px-3 py-2 sm:px-4 sm:py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs font-black rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:text-red-600 transition-all"
+      >
+        <EyeOff size={12} className="sm:w-[14px] sm:h-[14px]" />
+        Ocultar
+      </button>
+    ) : (
+      <button
+        onClick={() => onRestore?.(business.id)}
+        className="flex items-center gap-1 px-3 py-2 sm:px-4 sm:py-2 bg-white dark:bg-gray-800 text-teal-600 dark:text-teal-400 text-xs font-black rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:bg-teal-600 hover:text-white transition-all"
+      >
+        <Eye size={12} className="sm:w-[14px] sm:h-[14px]" />
+        Reponer
+      </button>
+    )}
+  </div>
+)}
           <div className="flex items-center justify-between gap-2 sm:gap-8 mb-6 sm:mb-10 py-4 sm:py-6 border-y border-gray-100 dark:border-gray-800">
   
   {/* VISITAS */}
