@@ -1573,7 +1573,7 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <h3 className="w-fit mx-auto text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-200 mb-4 text-center opacity-80">Donde <span className="text-teal-600 dark:text-teal-400">descubrís</span> negocios.</h3>
+            <h3 className="w-fit mx-auto text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-200 mb-4 text-center opacity-80">Donde <span className="text-teal-600 dark:text-teal-400">descubrís</span> negocios</h3>
             
             <div className="flex items-center justify-center mb-10">
   <div className="flex items-center gap-4 bg-teal-50 dark:bg-teal-900/10 px-5 py-3 rounded-2xl border border-teal-100 dark:border-teal-900/20 shadow-sm">
