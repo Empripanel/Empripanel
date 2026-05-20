@@ -1533,7 +1533,7 @@ const App: React.FC = () => {
             onClick={() => { setActiveTab('home'); handleScrollToStart(); }}
             className="flex items-center gap-2 hover:opacity-80 transition-opacity text-left active:scale-[0.98]"
           >
-            <div className="w-10 h-10 bg-gray rounded-2xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-gray-900 rounded-2xl flex items-center justify-center shadow-lg">
               <Logo className="w-8 h-8" />
             </div>
             
@@ -1573,14 +1573,33 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <h3 className="w-fit mx-auto text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-200 mb-4 text-center opacity-80">Descubrí <span className="text-teal-600 dark:text-teal-400">negocios</span> reales.</h3>
+            <h3 className="w-fit mx-auto text-xl sm:text-2xl font-black text-gray-900 dark:text-gray-200 mb-4 text-center opacity-80">Donde <span className="text-teal-600 dark:text-teal-400">descubrís</span> negocios.</h3>
             
             <div className="flex items-center justify-center mb-10">
-               <div className="flex items-center gap-2 bg-teal-50 dark:bg-teal-900/10 px-5 py-2.5 rounded-2xl border border-teal-100 dark:border-teal-900/20 shadow-sm">
-                  <Star size={16} className="text-teal-600 dark:text-teal-400 fill-teal-600 dark:fill-teal-400 animate-pulse" />
-                  <p className="text-xs font-black text-teal-800 dark:text-teal-200 uppercase tracking-tighter">Categoría destacada del día: <span className="underline decoration-2 underline-offset-4">{getLabelForValue(featuredCategory) ?? featuredCategory}</span></p>
-               </div>
-            </div>
+  <div className="flex items-center gap-4 bg-teal-50 dark:bg-teal-900/10 px-5 py-3 rounded-2xl border border-teal-100 dark:border-teal-900/20 shadow-sm">
+
+    <Star
+      size={16}
+      className="text-teal-600 dark:text-teal-400 fill-teal-600 dark:fill-teal-400 animate-pulse shrink-0"
+    />
+
+    <div className="flex flex-col items-center text-center leading-tight">
+      <p className="text-[10px] sm:text-xs font-black text-teal-700 dark:text-teal-300 uppercase tracking-widest">
+        Categoría destacada del día
+      </p>
+
+      <p className="text-sm sm:text-base font-black text-teal-900 dark:text-teal-100 underline decoration-2 underline-offset-4 break-words">
+        {getLabelForValue(featuredCategory) ?? featuredCategory}
+      </p>
+    </div>
+
+    <Star
+      size={16}
+      className="text-teal-600 dark:text-teal-400 fill-teal-600 dark:fill-teal-400 animate-pulse shrink-0"
+    />
+
+  </div>
+</div>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <div className="relative flex-1 group">
