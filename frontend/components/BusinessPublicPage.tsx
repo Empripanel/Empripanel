@@ -174,7 +174,7 @@ const BusinessPublicPage: React.FC<BusinessPublicPageProps> = ({ businessId, onC
   Visitar negocio
 </button>
 
-            
+      
           </div>
         </article>
       </div>
