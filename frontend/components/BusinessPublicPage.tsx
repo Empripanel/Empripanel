@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Heart, AlertTriangle, BarChart3, ExternalLink } from 'lucide-react';
 import * as authApi from '../services/authApi';
 import type { BackendBusiness } from '../services/authApi';
 import { userFacingError } from '../src/shared/userMessages';
@@ -104,6 +104,77 @@ const BusinessPublicPage: React.FC<BusinessPublicPageProps> = ({ businessId, onC
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
               {business.description}
             </p>
+
+<div className="mt-8 flex items-center justify-center gap-8">
+
+  {/* VISITAS */}
+  <div className="flex items-center gap-3">
+    <div className="p-3 rounded-2xl bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 border border-teal-100 dark:border-teal-900/30">
+      <BarChart3 size={24} />
+    </div>
+
+    <div>
+      <p className="text-[10px] uppercase font-black tracking-widest text-gray-500">
+        Visitas
+      </p>
+
+      <p className="text-2xl font-black">
+        {business.clickCount}
+      </p>
+    </div>
+  </div>
+
+  {/* LIKES */}
+  <div className="flex items-center gap-3">
+    <div className="p-3 rounded-2xl bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border border-pink-100 dark:border-pink-900/30">
+      <Heart size={24}/>
+    </div>
+
+    <div>
+      <p className="text-[10px] uppercase font-black tracking-widest text-gray-500">
+        Likes
+      </p>
+
+      <p className="text-2xl font-black">
+        {business.likeCount}
+      </p>
+    </div>
+  </div>
+
+  {/* REPORTES */}
+  <div className="flex items-center gap-3">
+    <div className="p-3 rounded-2xl bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border border-orange-100 dark:border-orange-900/30">
+      <AlertTriangle size={24}/>
+    </div>
+
+    <div>
+      <p className="text-[10px] uppercase font-black tracking-widest text-gray-500">
+        Reportes
+      </p>
+
+      <p className="text-2xl font-black">
+        {business.reportCount}
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<button
+  onClick={() => {
+    const url = business.redirectionUrl.startsWith('http')
+      ? business.redirectionUrl
+      : https://${business.redirectionUrl};
+
+    window.open(url, '_blank');
+  }}
+  className="mt-8 w-full h-14 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-black flex items-center justify-center gap-3 transition-all"
+>
+  <ExternalLink size={22}/>
+  Visitar negocio
+</button>
+
+            
           </div>
         </article>
       </div>
